@@ -1,0 +1,20 @@
+previews:
+  generation: automatic                    # Enforces preview builds on branch pull requests
+
+services:
+  - type: web                              # Establishes an internet-facing public web service container
+    name: hacksmith-6-ranker               # Your unique deployed service instance identifier
+    env: python                            # Tells Render to load a native Python container landscape
+    plan: free                             # Deploys on Render's free hobby tier instance
+    branch: main                           # Target repository deployment watch branch
+    
+    # 1. Dependency Ingestion Step
+    buildCommand: "pip install pandas streamlit pypdf docx2txt scikit-learn openpyxl"
+    
+    # 2. Native Web Application Startup Script Execution 
+    startCommand: "streamlit run app.py --server.port $PORT --server.address 0.0.0.0"
+    
+    # 3. Environment Scope Controls
+    envVars:
+      - key: PYTHON_VERSION
+        value: 3.12.0                      # Locks runtime deployment base environment version
